@@ -1,14 +1,17 @@
+from PySide6.QtWidgets import QWidget, QHBoxLayout
 from PySide6.QtCharts import QChart, QLineSeries, QChartView, QSplineSeries, QValueAxis, QDateTimeAxis
 from PySide6.QtCore import Qt, QDateTime
+from PySide6.QtGui import QColor
 
 
-class TempChart(QChartView):
+class TempChart(QWidget):
     def __init__(self, parent):
         super(TempChart, self).__init__(parent)
 
         self.axis_time = QDateTimeAxis()
         self.axis_time.setTitleText("Zeitachse")
         self.axis_time.setTickCount(7)
+        self.axis_time.setGridLineColor(QColor("red"))
         self.axis_time.setRange(QDateTime.currentDateTime(), QDateTime.currentDateTime().addDays(7))
 
         self.axis_percent = QValueAxis()
@@ -24,14 +27,18 @@ class TempChart(QChartView):
         self.axis_y.setRange(0, 20)
 
         self.chart = QChart()
-
-        self.setChart(self.chart)
-
-
         self.chart.addAxis(self.axis_x, Qt.AlignBottom)
         self.chart.addAxis(self.axis_time, Qt.AlignTop)
         self.chart.addAxis(self.axis_y, Qt.AlignLeft)
         self.chart.addAxis(self.axis_percent, Qt.AlignRight)
+
+        self.chart_view = QChartView()
+        self.chart_view.setChart(self.chart)
+
+        self.my_layout = QHBoxLayout()
+        self.my_layout.addWidget(self.chart_view)
+
+        self.setLayout(self.my_layout)
 
         self.series = QSplineSeries()
         self.chart.addSeries(self.series)
@@ -50,7 +57,6 @@ class TempChart(QChartView):
         self.chart.addSeries(self.series_2)
         self.series_2.attachAxis(self.axis_time)
         self.series_2.attachAxis(self.axis_percent)
-
         self.series_2.setName("Prozent über Zeit")
 
         self.series_2.append(QDateTime.currentDateTime().toMSecsSinceEpoch(), 0)
