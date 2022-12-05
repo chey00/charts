@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QWidget, QHBoxLayout, QSlider
 from PySide6.QtCharts import QChart, QLineSeries, QChartView, QSplineSeries, QValueAxis, QDateTimeAxis
-from PySide6.QtCore import Qt, QDateTime
+from PySide6.QtCore import Qt, QDateTime, SLOT
 from PySide6.QtGui import QColor
 
 
@@ -10,7 +10,8 @@ class TempChart(QWidget):
 
         self.axis_time = QDateTimeAxis()
         self.axis_time.setTitleText("Zeitachse")
-        self.axis_time.setTickCount(5)
+        self.axis_time.setFormat("mm.ss")
+        self.axis_time.setTickCount(6)
         self.axis_time.setGridLineColor(QColor("red"))
         self.axis_time.setRange(QDateTime.currentDateTime(), QDateTime.currentDateTime().addSecs(5 * 60))
 
@@ -38,13 +39,9 @@ class TempChart(QWidget):
         self.my_layout = QHBoxLayout()
         self.my_layout.addWidget(self.chart_view)
 
-        self.my_layout.addWidget(QSlider())
-
-        ### Aufgabe 2
-        # Verbinden Sie den QSlider aus Zeile 41 mit dem
-        # Werten auf der Prozent und Zeit-Achse. Wird der
-        # Slider bewegt, fügt sich ein neuer Wert mit Zeit
-        # -Stempel in das Diagramm ein.
+        self.slider = QSlider()
+        self.slider.valueChanged.connect(self.addPoint)
+        self.my_layout.addWidget(self.slider)
 
         self.setLayout(self.my_layout)
 
@@ -66,3 +63,6 @@ class TempChart(QWidget):
         self.series_2.attachAxis(self.axis_time)
         self.series_2.attachAxis(self.axis_percent)
         self.series_2.setName("Prozent über Zeit")
+
+    def addPoint(self, percent):
+        self.series_2.append(QDateTime.currentDateTime().toMSecsSinceEpoch(), percent)
