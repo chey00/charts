@@ -10,9 +10,9 @@ class TempChart(QWidget):
 
         self.axis_time = QDateTimeAxis()
         self.axis_time.setTitleText("Zeitachse")
-        self.axis_time.setTickCount(7)
+        self.axis_time.setTickCount(5)
         self.axis_time.setGridLineColor(QColor("red"))
-        self.axis_time.setRange(QDateTime.currentDateTime(), QDateTime.currentDateTime().addDays(7))
+        self.axis_time.setRange(QDateTime.currentDateTime(), QDateTime.currentDateTime().addSecs(5 * 60))
 
         self.axis_percent = QValueAxis()
         self.axis_percent.setTitleText("Prozent")
@@ -39,10 +39,6 @@ class TempChart(QWidget):
         self.my_layout.addWidget(self.chart_view)
 
         self.my_layout.addWidget(QSlider())
-        ### Aufgabe 1
-        # Ändern Sie den Zeitbereich der Zeitachse auf 0
-        # bis 5 Minuten in der Zukunft. Dafür müssen Sie
-        # die alten Werte löschen.
 
         ### Aufgabe 2
         # Verbinden Sie den QSlider aus Zeile 41 mit dem
@@ -70,8 +66,3 @@ class TempChart(QWidget):
         self.series_2.attachAxis(self.axis_time)
         self.series_2.attachAxis(self.axis_percent)
         self.series_2.setName("Prozent über Zeit")
-
-        self.series_2.append(QDateTime.currentDateTime().toMSecsSinceEpoch(), 0)
-        self.series_2.append(QDateTime.currentDateTime().addDays(1).toMSecsSinceEpoch(), 100)
-        self.series_2.append(QDateTime.currentDateTime().addDays(5).toMSecsSinceEpoch(), 10)
-        self.series_2.append(QDateTime.currentDateTime().addDays(6).toMSecsSinceEpoch(), 25)
