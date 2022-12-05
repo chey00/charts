@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QSlider
 from PySide6.QtCharts import QChart, QLineSeries, QChartView, QSplineSeries, QValueAxis, QDateTimeAxis
 from PySide6.QtCore import Qt, QDateTime
 from PySide6.QtGui import QColor
@@ -37,6 +37,18 @@ class TempChart(QWidget):
 
         self.my_layout = QHBoxLayout()
         self.my_layout.addWidget(self.chart_view)
+
+        self.my_layout.addWidget(QSlider())
+        ### Aufgabe 1
+        # Ändern Sie den Zeitbereich der Zeitachse auf 0
+        # bis 5 Minuten in der Zukunft. Dafür müssen Sie
+        # die alten Werte löschen.
+
+        ### Aufgabe 2
+        # Verbinden Sie den QSlider aus Zeile 41 mit dem
+        # Werten auf der Prozent und Zeit-Achse. Wird der
+        # Slider bewegt, fügt sich ein neuer Wert mit Zeit
+        # -Stempel in das Diagramm ein.
 
         self.setLayout(self.my_layout)
 
