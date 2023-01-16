@@ -1,7 +1,7 @@
-from PySide6.QtWidgets import QWidget, QHBoxLayout, QSlider
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QSlider, QMessageBox
 from PySide6.QtCharts import QChart, QLineSeries, QChartView, QSplineSeries, QValueAxis, QDateTimeAxis
-from PySide6.QtCore import Qt, QDateTime, SLOT
-from PySide6.QtGui import QColor
+from PySide6.QtCore import Qt, QDateTime
+from PySide6.QtGui import QColor, QMouseEvent
 
 
 class TempChart(QWidget):
@@ -51,12 +51,12 @@ class TempChart(QWidget):
         self.series.attachAxis(self.axis_x)
         self.series.attachAxis(self.axis_y)
 
-        self.series.append(0, 0)
-        self.series.append(1, 1)
-        self.series.append(2, 4)
-        self.series.append(3, 9)
-        self.series.append(4, 16)
-        self.series.append(5, 25)
+#        self.series.append(0, 0)
+#        self.series.append(1, 1)
+#        self.series.append(2, 4)
+#        self.series.append(3, 9)
+#        self.series.append(4, 16)
+#        self.series.append(5, 25)
 
         self.series_2 = QLineSeries()
         self.chart.addSeries(self.series_2)
@@ -66,3 +66,32 @@ class TempChart(QWidget):
 
     def addPoint(self, percent):
         self.series_2.append(QDateTime.currentDateTime().toMSecsSinceEpoch(), percent)
+
+    def mousePressEvent(self, event: QMouseEvent):
+        if event.isBeginEvent():
+            event.accept()
+            self.series_2.setName("Du hälst die Maus gedrückt.")
+        elif event.isEndEvent():
+            event.accept()
+            self.series_2.setName("Du hälst die Maus nicht mehr gedrückt.")
+
+    def mouseReleaseEvent(self, event: QMouseEvent):
+        self.series_2.setName("Du hälst die Maus nicht mehr gedrückt.")
+
+    def mouseDoubleClickEvent(self, event: QMouseEvent):
+        msgBox = QMessageBox()
+
+        text = "Sie haben auf die Position\n"
+        text += "x: " + str(event.x()) + "\n"
+        text += "y: " + str(event.y()) + "\n"
+        text += "global x: " + str(event.globalX()) + "\n"
+        text += "global y: " + str(event.globalY()) + "\n"
+        text += "doppelt geklickt."
+
+        msgBox.setText(text)
+
+        msgBox.exec()
+
+        maped_point = self.chart.mapToValue(event.pos(), self.series_2)
+        self.series_2.append(maped_point)
+
